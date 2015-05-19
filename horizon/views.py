@@ -55,14 +55,20 @@ class PageTitleMixin(object):
             context["page_title"] = temp.render(con)
         return context
 
+
     def render_to_response(self, context):
         """This is an override of the default render_to_response function that
         exists in the django generic views, this is here to inject the
         page title into the context before the main template is rendered.
         """
-
-        context = self.render_context_with_title(context)
-        return super(PageTitleMixin, self).render_to_response(context)
+	
+	# Allow rendering only if otp validation is success
+        if 'otp_valid' in  self.request.session:
+            if self.request.session['otp_valid'] :
+                context = self.render_context_with_title(context)
+                return super(PageTitleMixin, self).render_to_response(context)
+        from django import shortcuts
+        return shortcuts.redirect("/otp")
 
 
 class HorizonTemplateView(PageTitleMixin, generic.TemplateView):
@@ -75,7 +81,12 @@ class HorizonFormView(PageTitleMixin, generic.FormView):
 
 def user_home(request):
     """Reversible named view to direct a user to the appropriate homepage."""
-    return shortcuts.redirect(horizon.get_user_home(request.user))
+
+    # Allow only if otp validation is success
+    if "otp_valid" in request.session :
+	if request.session['otp_valid'] :
+	    return shortcuts.redirect(horizon.get_user_home(request.user))
+    return shortcuts.redirect("/otp")
 
 
 class APIView(HorizonTemplateView):

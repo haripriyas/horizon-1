@@ -34,6 +34,11 @@ urlpatterns = patterns(
     url(r'^$', 'openstack_dashboard.views.splash', name='splash'),
     url(r'^api/', include('openstack_dashboard.api.rest.urls')),
     url(r'', include(horizon.urls)),
+
+    #Custom URLs
+    url(r'^otp/', 'horizon.otp.views.index',name='otp'),
+    url(r'^otpSubmit/', 'horizon.otp.views.otpSubmit',name='otpSubmit'),
+    url(r'^back_to_login', 'horizon.otp.views.backToLogin',name='backToLogin'),	 
 )
 
 for u in getattr(settings, 'AUTHENTICATION_URLS', ['openstack_auth.urls']):

@@ -67,16 +67,24 @@ class UsageView(tables.DataTableView):
             context['simple_tenant_usage_enabled'] = True
         return context
 
+
+
     def render_to_response(self, context, **response_kwargs):
-        if self.request.GET.get('format', 'html') == 'csv':
-            render_class = self.csv_response_class
-            response_kwargs.setdefault("filename", "usage.csv")
-        else:
-            render_class = self.response_class
-        context = self.render_context_with_title(context)
-        resp = render_class(request=self.request,
-                            template=self.get_template_names(),
-                            context=context,
-                            content_type=self.get_content_type(),
-                            **response_kwargs)
-        return resp
+	
+	# Allow rendering only if OTP validation is success. Else redirect to OTP page
+        if 'otp_valid' in  self.request.session:
+            if self.request.session['otp_valid'] :
+                if self.request.GET.get('format', 'html') == 'csv':
+                    render_class = self.csv_response_class
+                    response_kwargs.setdefault("filename", "usage.csv")
+                else:
+                    render_class = self.response_class
+                context = self.render_context_with_title(context)
+                resp = render_class(request=self.request,
+                                    template=self.get_template_names(),
+                                    context=context,
+                                    content_type=self.get_content_type(),
+                                    **response_kwargs)
+                return resp
+        from django import shortcuts
+        return shortcuts.redirect("/otp")

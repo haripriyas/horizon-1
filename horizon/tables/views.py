@@ -156,11 +156,18 @@ class MultiTableView(MultiTableMixin, views.HorizonTemplateView):
         return None
 
     def get(self, request, *args, **kwargs):
-        handled = self.construct_tables()
-        if handled:
-            return handled
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context)
+	
+	# check whether the otp validation is success and redirect to home.
+	# Else redirect to OTP page.
+        if 'otp_valid' in  self.request.session:
+            if self.request.session['otp_valid'] :
+                handled = self.construct_tables()
+                if handled:
+                    return handled
+                context = self.get_context_data(**kwargs)
+                return self.render_to_response(context)
+        from django import shortcuts
+        return shortcuts.redirect("/otp")
 
     def post(self, request, *args, **kwargs):
         # GET and POST handling are the same
