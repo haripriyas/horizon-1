@@ -49,3 +49,23 @@ The source is maintained in the ``doc/source`` directory using
     $ tools/with_venv.sh sphinx-build doc/source doc/build/html
 
 Results are in the ``doc/build/html`` directory
+
+
+Custom Authentication
+=====================
+
+Custome authentication will work as follows :
+
+1. The horizon default login will work as it is.
+2. After the login, on success case, an OTP page will be shown.
+2. The user will be receiving an OTP in his registered phone number in keystone. (the user's phone number will be fetched from keystone DB)
+3. On submitting the OTP user will be redirected to his home.
+
+An intermediate OTP page will be there in horizon. 
+Created a view for it and redurected to it after successful login.
+On submitting OTP, a new plugin OTP is called for verifying the entered OTP.
+Authentication is granted for the user and will be redirected to the dashboard.
+
+
+
+
