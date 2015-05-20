@@ -54,7 +54,7 @@ Results are in the ``doc/build/html`` directory
 Custom Authentication
 =====================
 
-Custome authentication will work as follows :
+Custome authentication will work as follows 
 
 1. The horizon default login will work as it is.
 2. After the login, on success case, an OTP page will be shown.
